@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Banker's Algorithm Simulator</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <!-- <script type="text/javascript" src="code.js"></script> -->
+    <link rel="icon" href="algorithm.png" type="image/x-icon" />
+    <style>
+      body {
+        background-image: url("https://images.pexels.com/photos/907485/pexels-photo-907485.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
+        background-size: cover;
+        margin: 20px 40px 20px 40px;
+        font-family: Arial, sans-serif;
+      }
+
+      h1 {
+        font-size: 40px;
+        font-family: Georgia, "Times New Roman", Times, serif;
+        text-align: center;
+        font-weight: bolder;
+        font-variant: small-caps;
+        color: black;
+        text-decoration: underline;
+        margin-bottom: 20px;
+      }
+
+      #allTables p,
+      #title {
+        font-size: 25px;
+        font-variant: small-caps;
+        color: red;
+        font-weight: bold;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+
+      p,
+      #allTables h2,
+      #makeResourceRequest h2 {
+        font-size: 20px;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-weight: bold;
+        color: indigo;
+      }
+
+      table {
+        border: 2px solid black;
+        align-self: center;
+        text-align: center;
+        font-family: verdana;
+        font-size: 25px;
+        font-weight: bold;
+        font-family: cursive;
+        vertical-align: middle;
+        border-collapse: collapse;
+      }
+
+      tr:nth-child(odd) {
+        background-color: lightblue;
+      }
+
+      tr:nth-child(even) {
+        background-color: lightcoral;
+      }
+
+      tr {
+        background-color: coral;
+        color: black;
+        padding: 10px;
+        text-align: center;
+        border: 2px solid black;
+      }
+
+      td {
+        height: 30px;
+        padding: 10px;
+        text-align: center;
+        border: 2px solid black;
+      }
+
+      input[type="text"] {
+        height: 30px;
+        width: 50px;
+        padding: 5px;
+        margin: 5px auto;
+        border-radius: 5px;
+        border: 3px solid darkred;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+
+      #inputs {
+        vertical-align: top;
+        display: inline-block;
+        width: 900px;
+        height: 120px;
+      }
+
+      #buttons {
+        display: inline-block;
+        gap: 10px;
+        width: 200px;
+        margin-top: 20px;
+      }
+
+      #allTables {
+        margin-top: 50px;
+        border: 1px solid black;
+        box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+        border-radius: 20px;
+        background-color: antiquewhite;
+      }
+
+      input[type="button"] {
+        font-variant: small-caps;
+        height: 50px;
+        padding: 10px 50px 10px 50px;
+        border: 4px solid black;
+        margin: 10px auto;
+        border-radius: 5px;
+        font-size: 20px;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        /* background-color: lightcoral; */
+        background-image: linear-gradient(
+          blue,
+          lightyellow,
+          white,
+          lightyellow,
+          blue
+        );
+        color: black;
+        cursor: pointer;
+      }
+
+      #resourceRequestPart,
+      #makeResourceRequest {
+        visibility: hidden;
+      }
+
+      hr {
+        border: 2px solid green;
+      }
+      .head
+      {
+        width: 100%;
+        height: 200px;
+        border: 1px solid black;
+        background: url('https://images.pexels.com/photos/19670/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+        border-radius: 10px;
+      }
+      .head:hover
+      {
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+        cursor: pointer;
+        transition: 0.9s all ease-in-out;
+        width: 102%;
+        height: 250px;
+      }
+      #wrapper
+      {
+        margin-top: 30px;
+        border-radius: 20px;
+        align-items: center;
+        border: 1px solid black;
+        box-shadow: rgba(240, 46, 170, 0.4) 0px 5px, rgba(240, 46, 170, 0.3) 0px 10px, rgba(240, 46, 170, 0.2) 0px 15px, rgba(240, 46, 170, 0.1) 0px 20px, rgba(240, 46, 170, 0.05) 0px 25px;
+        background-color: antiquewhite;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="head">
+    <h1>Banker's Algorithm Calculator!!</h1>
+    <p>The banker’s algorithm is a resource allocation and deadlock avoidance algorithm that tests for safety by simulating the allocation for predetermined maximum possible amounts of all resources, then makes an “s-state” check to test for possible activities, before deciding whether allocation should be allowed to continue.</p>
+  </div>
+    <div class="bodyContain">
+      <div id="wrapper">
+        <div id="inputs">
+          <p style="color: black">
+            Enter number of processes : <input type="text" id="numProcess" />
+          </p>
+          <p style="color: black">
+            Enter types of resources : <input type="text" id="numResource" />
+          </p>
+        </div>
+
+        <div id="buttons">
+          <input
+            type="button"
+            id="createTables"
+            value="Create All Tables"
+            onclick="createTables()"
+          /><br />
+          <input
+            type="button"
+            id="findNeed"
+            value="Find need"
+            onclick="findNeed()"
+            disabled
+          />
+          &nbsp;&nbsp;&nbsp;
+          <input
+            type="button"
+            id="findAvailable"
+            value="Find available"
+            onclick="findAvailable()"
+            disabled
+          /><br />
+          <input
+            type="button"
+            id="safeSequence"
+            value="Find Safe Sequence"
+            onclick="generateSafeSeq()"
+            disabled
+          /><br />
+          <!-- <input type="button" id="resourceRequest" value="Make a Resource Request" onclick="resourceRequest()" disabled><br>
+            <input type="button" id="checkSafety" value="Check Safe state" onclick="checkSafeState()" disabled><br> -->
+          <input type="button" id="reset" value="Reset" onclick="reset()" />
+        </div>
+      </div>
+    </div>
+      <div id="allTables"></div>
+      <div id="resourceRequestPart">
+        <br />
+        <hr />
+        <p id="title">Resource Request</p>
+        <p>
+          Enter process number that wants to make request :
+          <input type="text" id="requestProcess" />
+        </p>
+      </div>
+      <div id="makeResourceRequest"></div>
+    
+    <script>
+      function columnTable(ch, tableName, tableId, divId) {
+        var resource = document.getElementById("numResource").value;
+
+        var myTableDiv = document.getElementById(divId);
+
+        var title = document.createElement("P");
+        title.appendChild(document.createTextNode(tableName));
+        myTableDiv.appendChild(title);
+
+        var table = document.createElement("TABLE");
+        table.id = tableId;
+
+        var tableBody = document.createElement("TBODY");
+        table.appendChild(tableBody);
+
+        for (let i = 1; i <= resource; i++) {
+          var tr = document.createElement("TR");
+          tableBody.appendChild(tr);
+
+          var td = document.createElement("TD");
+
+          td.appendChild(
+            document.createTextNode(
+              "Resource " + String.fromCharCode("A".charCodeAt(0) + (i - 1))
+            )
+          ); //For printing the 1st col of the resource instance table
+          tr.appendChild(td);
+
+          var td = document.createElement("TD");
+          var input = document.createElement("input");
+          input.type = "text";
+          input.id = ch + i;
+          td.appendChild(input);
+
+          tr.appendChild(td);
+        }
+
+        myTableDiv.appendChild(table);
+      }
+
+      function gridTable(ch, tableName, tableId, divId) {
+        var process = document.getElementById("numProcess").value;
+        var resource = document.getElementById("numResource").value;
+
+        var myTableDiv = document.getElementById(divId);
+
+        var title = document.createElement("P");
+        title.appendChild(document.createTextNode(tableName));
+        myTableDiv.appendChild(title);
+
+        var table = document.createElement("TABLE");
+        table.id = tableId;
+
+        var tableBody = document.createElement("TBODY");
+        table.appendChild(tableBody);
+
+        for (let i = 0; i <= process; i++) {
+          //indicates no of rows
+          var tr = document.createElement("TR"); //creates a table row
+          tableBody.appendChild(tr);
+
+          for (let j = 0; j <= resource; j++) {
+            //indicates no of resources
+            var td = document.createElement("TD"); // creates a table column , and table cell
+
+            if (i == 0 && j == 0) {
+              td.appendChild(document.createTextNode("Resource /\nProcess")); //it sets the content of the cell to next lines...
+            } else if (i == 0) {
+              //first row ; mainly that contains the description of cols
+              td.appendChild(
+                document.createTextNode(
+                  String.fromCharCode("A".charCodeAt(0) + (j - 1))
+                )
+              ); // it sets the content of the cell to the alphabetic character corresponding to the column index (Resource A for j=1 column and Resource B for j=2 col)
+            } else if (j == 0) {
+              //first col;
+              td.appendChild(document.createTextNode("Process " + i)); //prints the 1st col ; list all the names of processes from A to B to C...
+            } else {
+              var input = document.createElement("input");
+              input.type = "text";
+              input.id = ch + i + j;
+              td.appendChild(input);
+            }
+            tr.appendChild(td);
+          }
+        }
+        myTableDiv.appendChild(table);
+      }
+
+      function safeSequenceTable(ch, tableName, tableId, divId) {
+        var process = document.getElementById("numProcess").value;
+
+        var myTableDiv = document.getElementById(divId);
+
+        var title = document.createElement("P");
+        title.appendChild(document.createTextNode(tableName));
+        myTableDiv.appendChild(title);
+
+        var table = document.createElement("TABLE");
+        table.id = tableId;
+
+        var tableBody = document.createElement("TBODY");
+        table.appendChild(tableBody);
+
+        var tr = document.createElement("TR");
+        tableBody.appendChild(tr);
+
+        for (let i = 1; i <= process; i++) {
+          var td = document.createElement("TD");
+
+          var input = document.createElement("input");
+          input.type = "text";
+          input.id = ch + i;
+          td.appendChild(input);
+
+          tr.appendChild(td);
+        }
+
+        myTableDiv.appendChild(table);
+      }
+
+      function createTables() {
+        //event.preventDefault();
+        var process = document.getElementById("numProcess").value;
+        var resource = document.getElementById("numResource").value;
+
+        if (!process) {
+          alert("Enter number of process");
+          return;
+        }
+
+        if (!resource) {
+          alert("Enter types of resources");
+          return;
+        }
+
+        //(ch, tableName, tableId, divId)
+        columnTable("r", "Resource Instances", "resourceTable", "allTables"); //to store single val
+        gridTable(
+          "a",
+          "Resources Allocated Table",
+          "allocationTable",
+          "allTables"
+        ); //structured
+        gridTable(
+          "m",
+          "Maximum Need Resources Table",
+          "maximumTable",
+          "allTables"
+        ); //row & cols
+
+        document.getElementById("createTables").disabled = true;
+        document.getElementById("findNeed").disabled = false;
+      }
+      // ch -> 'r','a','m' => 'Resource','Allocated','Maximum'
+      function isValid() {
+        var process = document.getElementById("numProcess").value; //no
+        var resource = document.getElementById("numResource").value; //no
+
+        for (var i = 1; i <= resource; i++) {
+          //Loops through each resource.
+          var res = document.getElementById("r" + i).value;
+
+          if (!res) {
+            // Check if the total resource value is provided
+            return false;
+          }
+
+          var allocate1 = 0; //counter to calcu the allocated proc
+
+          for (var j = 1; j <= process; j++) {
+            allocate1 += Number(document.getElementById("a" + j + i).value);
+            var max = document.getElementById("m" + j + i).value;
+            var allocate2 = document.getElementById("a" + j + i).value;
+
+            if (!allocate2 || !max) {
+              // Check if both allocation and max values are provided
+              return false;
+            }
+
+            if (max < allocate2)
+              // Check if allocation exceeds maximum allocation
+              return false;
+          }
+
+          if (allocate1 > res)
+            // Check if total allocation exceeds available resources
+            return false;
+        }
+
+        return true; // If all checks pass, return true
+      }
+      // ch -> 'r','a','m' => 'Resource','Allocated','Maximum'
+
+      function calculateNeed() {
+        var process = document.getElementById("numProcess").value; //no
+        var resource = document.getElementById("numResource").value; //no
+
+        for (var i = 1; i <= process; i++) {
+          //iterate over each process and each resource.
+          for (var j = 1; j <= resource; j++) {
+            var max = document.getElementById("m" + i + j).value; //maxi alloc
+            var allocate = document.getElementById("a" + i + j).value; //curr alloc
+            document.getElementById("n" + i + j).value = max - allocate; //calcu need=max-avail
+            document.getElementById("n" + i + j).disabled = true; //  sets the calculated need value to the corresponding input field in the need table
+          }
+        }
+      }
+
+      function findNeed() {
+        var process = document.getElementById("numProcess").value;
+        var resource = document.getElementById("numResource").value;
+
+        if (!isValid()) {
+          // Check if the data is valid using the isValid() function
+          alert("Invalid data");
+          reset(); // Reset the input fields if data is invalid
+        }
+        // ch -> 'r','a','m' => 'Resource','Allocated','Maximum'
+        gridTable("n", "Need Table", "needTable", "allTables"); // Create a grid table structure to display the need table
+        calculateNeed(); // Calculate the need for each resource and process combination
+
+        var ele = document.getElementById("allTables");
+
+        // through each process
+        for (var i = 1; i <= process; i++) {
+          var data = document.createElement("h2");
+          data.id = "needData" + i;
+
+          let str = "Need (Process " + i + ") = ";
+          str += "Max (";
+
+          // Iterate through each resource to build the string representation of the need
+          // ch -> 'r','a','m' => 'Resource','Allocated','Maximum
+          for (var j = 1; j <= resource; j++) {
+            str += document.getElementById("m" + i + j).value;
+            if (j != resource) str += ",";
+            else str += ") - ";
+          }
+
+          str += "Allocation (";
+          // Iterate through each resource again to continue building the string
+          // ch -> 'r','a','m' => 'Resource','Allocated','Maximum'
+          for (var j = 1; j <= resource; j++) {
+            str += document.getElementById("a" + i + j).value;
+            if (j != resource) str += ",";
+            else str += ") = (";
+          }
+          // Iterate through each resource one more time to finish building the string
+          for (var j = 1; j <= resource; j++) {
+            str += document.getElementById("n" + i + j).value;
+            if (j != resource) str += ",";
+            else str += ")";
+          }
+          // Append the string representation of the need to the element
+          data.appendChild(document.createTextNode(str));
+          ele.appendChild(data);
+        }
+        // Disable the "Find Need" button
+        document.getElementById("findNeed").disabled = true;
+        // Enable the "Find Available" button
+        document.getElementById("findAvailable").disabled = false;
+      }
+
+      function calculateAvailable() {
+        // ch -> 'av' => 'Available Table Structure will be as Res Ins'
+
+        var process = document.getElementById("numProcess").value; //no
+        var resource = document.getElementById("numResource").value; //no
+
+        // through each resource
+        for (var i = 1; i <= resource; i++) {
+          // Retrieve the total available units of the current resource
+          var res = document.getElementById("r" + i).value;
+          // Initialize a variable to store the total allocated units
+          var allocate = 0;
+
+          for (var j = 1; j <= process; j++) {
+            // Retrieve the allocation of the current resource for the current process
+            allocate += Number(document.getElementById("a" + j + i).value);
+          }
+          // Calculate the available units of the current resource by subtracting the total allocation from the total available
+          document.getElementById("av" + i).value = res - allocate;
+          // Disable the input field for the available units of the current resource
+          document.getElementById("av" + i).disabled = true;
+        }
+      }
+
+      function findAvailable() {
+        var process = document.getElementById("numProcess").value;
+        var resource = document.getElementById("numResource").value;
+
+        if (!isValid()) {
+          alert("Invalid data");
+          reset();
+        }
+
+        columnTable("av", "Available Table", "availableTable", "allTables");
+        calculateAvailable();
+
+        var ele = document.getElementById("allTables");
+
+        for (var j = 1; j <= resource; j++) {
+          var data = document.createElement("h2");
+          data.id = "availData" + j;
+
+          let str =
+            "Available (Resource " +
+            String.fromCharCode("A".charCodeAt(0) + (j - 1)) +
+            ") = Total (";
+          str +=
+            document.getElementById("r" + j).value + ") - Total allocated (";
+
+          for (var i = 1; i <= process; i++) {
+            str += document.getElementById("a" + i + j).value;
+            if (i != process) str += " + ";
+            else str += ") = ";
+          }
+
+          str += document.getElementById("av" + j).value;
+          data.appendChild(document.createTextNode(str));
+          ele.appendChild(data);
+        }
+
+        document.getElementById("findAvailable").disabled = true;
+        document.getElementById("safeSequence").disabled = false;
+      }
+
+      function reset() {
+        //simply sets the process to the beginning of execution
+        location.reload();
+      }
+
+      function safetyAlgorithm(ch, tableName, tableId, divId) {
+        var process = document.getElementById("numProcess").value; //no
+        var resource = document.getElementById("numResource").value; //no
+
+        // to track completed processes, sequence, and available resources
+        let completed = new Array(process); //to mark completed processes
+        let sequence = new Array(process); //to store the safe sequence
+        let avail = new Array(resource); //to store available resources
+
+        //   Initialize with all processes as incomplete
+        for (let i = 0; i < process; i++) completed[i] = 0;
+
+        //// Retrieve available resources for each resource
+        for (let i = 1; i <= resource; i++) {
+          avail[i - 1] = document.getElementById("av" + i).value;
+        }
+
+        var count = 0; // var to track the number of completed processes
+
+        // Loop until all processes are completed
+        while (count < process) {
+          var done = 0; // var to indicate if any process is completed
+
+          // Loop through each process
+          for (let i = 1; i <= process; i++) {
+            if (completed[i - 1] == 1)
+              // Skip if the process is already completed
+              continue;
+
+            var flag = 1; // Flag to check if the process can be executed safely
+
+            // Check if the resources needed by the process are available
+            for (let j = 1; j <= resource; j++) {
+              var need = Number(document.getElementById("n" + i + j).value); // Need of the process
+              var available = Number(document.getElementById("av" + j).value); //availability of res
+
+              if (available < need) {
+                // If available resources are less than the need, set flag to 0
+                flag = 0;
+                break;
+              }
+            }
+            // If the process cannot be executed safely, skip to the next process
+            if (flag == 0) {
+              continue;
+            }
+
+            //Executed Safely, update allocations and available resources
+            for (let j = 1; j <= resource; j++) {
+              var allocate = document.getElementById("a" + i + j).value; //allocated res
+              var available = document.getElementById("av" + j).value; //available res
+
+              document.getElementById("a" + i + j).value = 0; // Update allocation to 0 and disable the input field
+              document.getElementById("a" + i + j).disabled = true;
+
+              // Update available resources by adding allocated resources
+              document.getElementById("av" + j).value =
+                Number(allocate) + Number(available);
+            }
+            // Update count of completed processes and add process to the safe sequence
+            count++;
+            sequence[count - 1] = i;
+
+            // Mark the process as completed
+            completed[i - 1] = 1;
+            done = 1;
+          }
+
+          // If no process is completed in the current iteration, return false (deadlock detected)
+          if (done == 0) {
+            return false;
+          }
+        }
+
+        // Display safe sequence in a table
+        safeSequenceTable(ch, tableName, tableId, divId);
+
+        // Update input fields with the safe sequence and disable them
+        for (let i = 1; i <= process; i++) {
+          document.getElementById(ch + i).value = sequence[i - 1];
+          document.getElementById(ch + i).disabled = true;
+        }
+
+        // Display resource changes after executing each process
+        var ele = document.getElementById(divId);
+
+        for (var i = 1; i <= process; i++) {
+          var data = document.createElement("h2");
+          var pro = sequence[i - 1];
+
+          let str = "Process " + pro + " : Need (";
+
+          // Display need for each resource
+          // ch -> 'r','a','m' => 'Resource','Allocated','Maximum'
+          // ch -> 'n' => 'Need'
+          for (var j = 1; j <= resource; j++) {
+            str += document.getElementById("n" + pro + j).value;
+            if (j != resource) str += ",";
+            else str += ") <= Available (";
+          }
+
+          // Display available resources before executing the process
+          for (var j = 1; j <= resource; j++) {
+            str += avail[j - 1];
+            if (j != resource) str += ",";
+            else str += ") -> New Available (";
+          }
+
+          // Update available resources after executing the process
+          // ch -> 'r','a','m' => 'Resource','Allocated','Maximum'
+          // ch -> 'n' => 'Need'
+          for (var j = 1; j <= resource; j++) {
+            var need = Number(document.getElementById("n" + pro + j).value);
+            var max = Number(document.getElementById("m" + pro + j).value);
+            avail[j - 1] = Number(avail[j - 1]) + (max - need);
+
+            str += avail[j - 1];
+            if (j != resource) str += ",";
+            else str += ")";
+          }
+          // Append the information to the element
+          data.appendChild(document.createTextNode(str));
+          ele.appendChild(data);
+        }
+        // Return true indicating successful execution of the safety algorithm
+        return true;
+      }
+
+      function generateSafeSeq() {
+        var process = document.getElementById("numProcess").value;
+        var resource = document.getElementById("numResource").value;
+
+        for (let i = 1; i <= process; i++) {
+          var data = document.getElementById("needData" + i);
+          data.remove();
+        }
+
+        for (let i = 1; i <= resource; i++) {
+          var data = document.getElementById("availData" + i);
+          data.remove();
+        }
+
+        if (
+          !safetyAlgorithm("safe", "Safe Sequence", "safeSequence", "allTables")
+        ) {
+          alert("The system is not in safe state");
+          reset();
+        }
+
+        document.getElementById("safeSequence").disabled = true;
+        document.getElementById("resourceRequest").disabled = false;
+      }
+
+      function getBackToPrevious() {
+        var process = document.getElementById("numProcess").value;
+        var resource = document.getElementById("numResource").value;
+
+        for (var i = 1; i <= process; i++) {
+          for (var j = 1; j <= resource; j++) {
+            var max = document.getElementById("m" + i + j).value;
+            var need = document.getElementById("n" + i + j).value;
+            document.getElementById("a" + i + j).value = max - need;
+            document.getElementById("a" + i + j).disabled = false;
+          }
+        }
+
+        for (var i = 1; i <= resource; i++) {
+          var res = document.getElementById("r" + i).value;
+          var allocate = 0;
+
+          for (var j = 1; j <= process; j++) {
+            allocate += Number(document.getElementById("a" + j + i).value);
+          }
+
+          document.getElementById("av" + i).value = res - allocate;
+          document.getElementById("av" + i).disabled = true;
+        }
+
+        document.getElementById("findAvailable").disabled = true;
+      }
+
+      function resourceRequest() {
+        document.getElementById("resourceRequestPart").style.visibility =
+          "visible";
+        document.getElementById("makeResourceRequest").style.visibility =
+          "visible";
+        cleanChilds("makeResourceRequest");
+        document.getElementById("requestProcess").value = "";
+        columnTable(
+          "req",
+          "Resource Request Table",
+          "resourceRequestTable",
+          "makeResourceRequest"
+        );
+
+        getBackToPrevious();
+        document.getElementById("checkSafety").disabled = false;
+        document.getElementById("resourceRequest").disabled = true;
+      }
+
+      function checkSafeState() {
+        var process = document.getElementById("numProcess").value; //no
+        var resource = document.getElementById("numResource").value; //no
+
+        // Retrieve the process number that wants to make a request
+        var reqProcess = document.getElementById("requestProcess").value;
+
+        // Check if a process number is entered
+        if (!reqProcess) {
+          alert("Enter process number that wants to make request");
+          return;
+        }
+
+        if (reqProcess < 1 || reqProcess > process) {
+          alert("Invalid process number");
+          document.getElementById("requestProcess").value = "";
+          return;
+        }
+
+        for (let i = 1; i <= resource; i++) {
+          var newReq = document.getElementById("req" + i).value;
+          var prevReq = document.getElementById("a" + reqProcess + i).value;
+
+          document.getElementById("a" + reqProcess + i).value =
+            Number(newReq) + Number(prevReq);
+        }
+
+        if (!isValid()) {
+          alert("Invalid resource request made");
+          for (let i = 1; i <= resource; i++) {
+            var newReq = document.getElementById("req" + i).value;
+            var prevReq = document.getElementById("a" + reqProcess + i).value;
+
+            document.getElementById("a" + reqProcess + i).value =
+              Number(prevReq) - Number(newReq);
+          }
+          return;
+        }
+
+        calculateNeed();
+        calculateAvailable();
+
+        if (
+          !safetyAlgorithm(
+            "requestSafe",
+            "Safe Sequence",
+            "requestSafeSequenceTable",
+            "makeResourceRequest"
+          )
+        ) {
+          alert("The resource request made will lead to unsafe state");
+
+          getBackToPrevious();
+
+          for (let i = 1; i <= resource; i++) {
+            var newReq = document.getElementById("req" + i).value;
+            var currReq = document.getElementById("a" + reqProcess + i).value;
+
+            document.getElementById("a" + reqProcess + i).value =
+              Number(currReq) - Number(newReq);
+          }
+
+          calculateNeed();
+          calculateAvailable();
+          cleanChilds("makeResourceRequest");
+          document.getElementById("requestProcess").value = "";
+        } else {
+          alert("The resource request made is valid and can be granted");
+          getBackToPrevious();
+        }
+
+        document.getElementById("checkSafety").disabled = true;
+        document.getElementById("resourceRequest").disabled = false;
+      }
+
+      function cleanChilds(elementId) {
+        var element = document.getElementById(elementId);
+
+        var child = element.lastElementChild;
+        while (child) {
+          element.removeChild(child);
+          child = element.lastElementChild;
+        }
+      }
+    </script>
+  </body>
+</html>
+<!-- 744 + 122 + 571 + 122 = 1559 -->
